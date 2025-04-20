@@ -50,7 +50,7 @@ class OpenMowerMqttButtonEntity(OpenMowerMqttEntity, ButtonEntity):
         self._available = False
 
     async def async_added_to_hass(self) -> None:
-        _LOGGER.warning(f"Subscribing to {self._mqtt_topic_prefix + AVAILABILITY_TOPIC} for availability")
+        _LOGGER.debug(f"Subscribing to {self._mqtt_topic_prefix + AVAILABILITY_TOPIC} for availability")
         await mqtt.async_subscribe(
             self.hass, self._mqtt_topic_prefix + AVAILABILITY_TOPIC, self._availability_callback, 1
         )
