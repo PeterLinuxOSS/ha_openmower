@@ -45,18 +45,18 @@ async def async_setup_entry(
 
 class OpenMowerMqttButtonEntity(OpenMowerMqttEntity, ButtonEntity):
     def __init__(self, name, prefix, availability_action_id):
-        super().__init__(name, prefix, "actions/json", availability_action_id)
+        super().__init__(name, prefix, "{}/actions/json".format(prefix), availability_action_id)
         self._availability_action_id = availability_action_id
         self._available = False
 
     async def async_added_to_hass(self) -> None:
-        _LOGGER.debug(f"Subscribing to {AVAILABILITY_TOPIC} for availability")
+        _LOGGER.warning(f"Subscribing to {self._mqtt_topic_prefix + AVAILABILITY_TOPIC} for availability")
         await mqtt.async_subscribe(
-            self.hass, AVAILABILITY_TOPIC, self._availability_callback, 1
+            self.hass, self._mqtt_topic_prefix + AVAILABILITY_TOPIC, self._availability_callback, 1
         )
 
     def _availability_callback(self, msg: mqtt.ReceiveMessage) -> None:
-        _LOGGER.debug(f"Received MQTT message on {AVAILABILITY_TOPIC}: {msg.payload}")
+        _LOGGER.debug(f"Received MQTT message on {self._mqtt_topic_prefix + AVAILABILITY_TOPIC}: {msg.payload}")
         try:
             payload = json.loads(msg.payload)
             _LOGGER.debug(f"Parsed payload: {payload}")
