@@ -72,6 +72,9 @@ async def async_setup_entry(
             OpenMowerCurrentSensor(
                 "Mow Motor Current", prefix, "sensors/om_mow_motor_current/data", None
             ),
+            OpenMowerRPMSensor(
+                "Mow Motor RPM", prefix, "sensors/om_mow_motor_rpm/data", None
+            ),
             OpenMowerTemperatureSensor(
                 "Mow Motor Temperature", prefix, "sensors/om_mow_motor_temp/data", None
             ),
@@ -142,6 +145,11 @@ class OpenMowerCurrentSensor(OpenMowerRawDiagnosticSensor):
     _attr_native_unit_of_measurement = UnitOfElectricCurrent.AMPERE
     _attr_suggested_display_precision = 1
 
+class OpenMowerRPMSensor(OpenMowerRawDiagnosticSensor):
+    _attr_icon = "mdi:fan"
+    _attr_device_class = SensorStateClass.MEASUREMENT
+    _attr_native_unit_of_measurement = "RPM"
+    _attr_suggested_display_precision = 0
 
 class OpenMowerTemperatureSensor(OpenMowerRawDiagnosticSensor):
     _attr_device_class = SensorDeviceClass.TEMPERATURE
